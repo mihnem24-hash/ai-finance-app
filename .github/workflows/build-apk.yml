@@ -31,7 +31,7 @@ jobs:
 
       - name: Собрать APK
         run: |
-          flet build apk --project-name "AI_Finance" --description "AI and Finance Dashboard"
+          flet build apk
 
       - name: Загрузить APK в артефакты сборки
         uses: actions/upload-artifact@v4
