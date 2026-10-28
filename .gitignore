@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Сборка Flet / Flutter
+build/
+dist/
+*.apk
+*.aab
+*.ipa
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
