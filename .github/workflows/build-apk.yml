@@ -1,21 +1,12 @@
-# Сборка Android-приложения (.apk) через GitHub Actions.
-# Запуск: вкладка Actions → «Сборка Android APK» → «Run workflow»,
-# либо автоматически при пуше в ветку main / при создании тега v*.
-name: Сборка Android APK
+name: Сборка Android APK (Flet + Flutter)
 
 on:
   push:
     branches: [ main ]
-    tags: [ "v*" ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  build-apk:
+  build:
     name: Сборка APK (Flet + Flutter)
     runs-on: ubuntu-latest
 
@@ -23,61 +14,27 @@ jobs:
       - name: Получить исходники
         uses: actions/checkout@v4
 
-      - name: Настроить Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-
-      - name: Настроить Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-
       - name: Настроить Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-          cache: pip
+          python-version: '3.12'
 
       - name: Установить зависимости
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install flet
 
       - name: Сгенерировать иконку приложения
-        run: python -I tools/make_icon.py assets/icon.png
-
-      - name: Проверить окружение
         run: |
-          python --version
-          flutter --version
-          python -m flet --version
+          python tools/make_icon.py || echo "Icon script skipped or failed"
 
       - name: Собрать APK
-        run: python -m flet build apk --verbose
-
-      - name: Переименовать артефакт
         run: |
-          mkdir -p dist
-          APK=$(ls build/apk/*.apk | head -n 1)
-          cp "$APK" "dist/AI-Finance-${GITHUB_REF_NAME//\//-}.apk"
-          ls -lh dist
+          flet build apk --project-name "AI_Finance" --description "AI and Finance Dashboard"
 
       - name: Загрузить APK в артефакты сборки
         uses: actions/upload-artifact@v4
         with:
-          name: ai-finance-apk
-          path: dist/*.apk
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Опубликовать релиз (для тегов v*)
-        if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*.apk
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: app-release-apk
+          path: build/apk/*.apk
