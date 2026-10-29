@@ -8,17 +8,17 @@ dependencies = ["flet>=0.28.0"]
 
 # Настройки сборки приложения (команда: flet build apk)
 [tool.flet]
-product = "AI & Финансы"
+product = "AI и Финансы"
 org = "com.myaiproject"
-company = "MyAiProject"
-copyright = "© 2026 MyAiProject"
+company = "MyAIProject"
+copyright = "© 2026 MyAIProject"
 # Иконка приложения. Перед сборкой сгенерируйте её:
-#   python -I tools/make_icon.py assets/icon.png
+# python -I tools/make_icon.py assets/icon.png
 icon = "assets/icon.png"
 
 [tool.flet.splash_screen]
 bgcolor = "#3D5AFE"
 
 [tool.flet.android]
-# Минимальная версия Android 7.0 — покрывает ~97% устройств
+# Минимальная версия Android 7.0 – покрывает ~97% устройств
 min_sdk_version = 24
